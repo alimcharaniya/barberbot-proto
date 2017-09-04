@@ -78,7 +78,10 @@ function onListening() {
 //SUBSCRIBE TO ALL MESSAGES FROM RPI
 // var subscriber = zmq.socket('sub');
 var io = require('socket.io')(server);
+const {Wit, log} = require('node-wit');
 
+// Wit.ai parameters
+const client = new Wit({accessToken: 'A6QUE5LJ2R2IZMXNAHF577CFF4IMRVSN'});
 
 //fires when page is loaded and there is connection between server and client
 io.on("connection",function(socket){
@@ -86,6 +89,19 @@ io.on("connection",function(socket){
 
   socket.on("userSentMessage", function(message){
     console.log( message);
+    client.message(message, {})
+    .then((data) => {
+      console.log('Yay, got Wit.ai response: ' + JSON.stringify(data));
+      //check the data and reply accordingly
+      var intent = '';
+      switch(intent){
+        case 'make_appointment':
+          break;
+        default:
+          return;
+      }
+    })
+    .catch(console.error);
   });
 
 });
